@@ -106,8 +106,7 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.2 }}
             className="relative z-10"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <Sparkles className="w-8 h-8 text-[var(--white)]" />
+            <div className="mb-4">
               <h1 className="text-[var(--white)] m-0">Alumni Meetup Registration</h1>
             </div>
             <p className="text-[var(--white)] opacity-90 m-0 max-w-2xl">
@@ -126,8 +125,7 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.3 }}
             className="mb-8"
           >
-            <h3 className="text-[var(--accent)] mb-6 flex items-center gap-2 border-b-2 border-[var(--secondary)] pb-2">
-              <User className="w-6 h-6" />
+            <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
               Personal Information
             </h3>
             
@@ -226,8 +224,7 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.4 }}
             className="mb-8"
           >
-            <h3 className="text-[var(--accent)] mb-6 flex items-center gap-2 border-b-2 border-[var(--secondary)] pb-2">
-              <Phone className="w-6 h-6" />
+            <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
               Contact Information
             </h3>
             
@@ -285,8 +282,7 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.5 }}
             className="mb-8"
           >
-            <h3 className="text-[var(--accent)] mb-6 flex items-center gap-2 border-b-2 border-[var(--secondary)] pb-2">
-              <Briefcase className="w-6 h-6" />
+            <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
               Professional Information
             </h3>
             
@@ -368,8 +364,7 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.6 }}
             className="mb-8"
           >
-            <h3 className="text-[var(--accent)] mb-6 flex items-center gap-2 border-b-2 border-[var(--secondary)] pb-2">
-              <Users className="w-6 h-6" />
+            <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
               Event Details
             </h3>
             
@@ -430,15 +425,14 @@ export default function AlumniRegistrationForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="flex justify-center"
+            className="flex justify-end"
           >
             <button
               type="submit"
               className="group relative px-12 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] text-[var(--white)] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95"
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                Complete Registration
+              <span className="relative z-10 flex items-center justify-center">
+                Submit
               </span>
               {/* Animated background on hover */}
               <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-dark)] to-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -447,7 +441,12 @@ export default function AlumniRegistrationForm() {
         </form>
 
         {/* Decorative bottom accent */}
-        <div className="h-2 bg-gradient-to-r from-[var(--accent)] via-[var(--secondary)] to-[var(--accent)]"></div>
+        <motion.div 
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+          className="h-2 bg-gradient-to-r from-[var(--accent)] via-[var(--secondary)] to-[var(--accent)] origin-left"
+        ></motion.div>
       </div>
     </motion.div>
   );

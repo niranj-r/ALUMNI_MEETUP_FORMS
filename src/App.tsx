@@ -1,5 +1,6 @@
 import AlumniRegistrationForm from './components/AlumniRegistrationForm';
 import EventInfo from './components/EventInfo';
+import EventPoster from './components/EventPoster';
 
 export default function App() {
   return (
@@ -21,8 +22,15 @@ export default function App() {
       ></div>
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        <EventInfo />
-        <AlumniRegistrationForm />
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          <div className="flex-1 w-full">
+            <AlumniRegistrationForm />
+          </div>
+          <div className="w-full lg:w-80 lg:sticky lg:top-8 space-y-8">
+            <EventPoster />
+            <EventInfo />
+          </div>
+        </div>
       </div>
     </div>
   );
