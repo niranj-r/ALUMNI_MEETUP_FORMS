@@ -263,8 +263,9 @@ export default function AlumniRegistrationForm() {
                     } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                 >
                   <option value="">Select course</option>
-                  <option value="cse">Computer Science & Engineering</option>
-                  <option value="ct">Computer Science & Engineering (Artificial Intelligence)</option>
+                  <option value="cse">B.Tech Computer Science & Engineering</option>
+                  <option value="ct">B.Tech Computer Science & Engineering (Artificial Intelligence)</option>
+                  <option value="mcse">M.Tech Computer Science & Engineering</option>
                 </select>
                 <div className="absolute right-4 top-[42px] pointer-events-none">
                   <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
