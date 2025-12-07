@@ -564,12 +564,7 @@ export default function AlumniRegistrationForm() {
         </form>
 
         {/* Decorative bottom accent */}
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-          className="h-2 bg-gradient-to-r from-[var(--accent)] via-[var(--secondary)] to-[var(--accent)] origin-left"
-        ></motion.div>
+        <div className="h-2 bg-gradient-to-r from-[var(--accent)] via-[var(--secondary)] to-[var(--accent)]"></div>
       </div>
     </motion.div>
   );
