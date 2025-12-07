@@ -145,7 +145,7 @@ export default function AlumniRegistrationForm() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
-      className="relative w-full max-w-6xl mx-auto p-8"
+      className="relative w-full pt-8"
     >
       {/* Decorative geometric elements */}
       <div className="absolute -top-10 -right-10 w-32 h-32 opacity-10 pointer-events-none">
@@ -264,11 +264,7 @@ export default function AlumniRegistrationForm() {
                 >
                   <option value="">Select course</option>
                   <option value="cse">Computer Science & Engineering</option>
-                  <option value="ece">Electronics & Communication</option>
-                  <option value="eee">Electrical & Electronics</option>
-                  <option value="me">Mechanical Engineering</option>
-                  <option value="ce">Civil Engineering</option>
-                  <option value="it">Information Technology</option>
+                  <option value="ct">Computer Science & Engineering (Artificial Intelligence)</option>
                 </select>
                 <div className="absolute right-4 top-[42px] pointer-events-none">
                   <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
