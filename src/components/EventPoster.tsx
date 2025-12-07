@@ -17,7 +17,7 @@ export default function EventPoster() {
           {/* Poster image container */}
           <div className="w-full aspect-[3/4] rounded-lg overflow-hidden bg-[var(--dominant-bg)] shadow-inner">
             <ImageWithFallback
-              src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80"
+              src="/poster.png"
               alt="Alumni Meetup 2025 Event Poster"
               className="w-full h-full object-cover"
             />
