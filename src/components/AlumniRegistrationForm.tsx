@@ -2,19 +2,25 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 import { User, Calendar, Building2, Phone, Mail, Briefcase, MapPin, Users, Utensils, Award, Sparkles } from 'lucide-react';
 
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase"; // change path if needed
+
+
 export default function AlumniRegistrationForm() {
   const [formData, setFormData] = useState({
     name: '',
+    courseStudied: '',
     yearOfPassout: '',
-    department: '',
-    whatsappNumber: '',
+    designation: '',
     email: '',
-    currentOrganization: '',
-    currentPosition: '',
-    jobLocation: '',
+    whatsappNumber: '',
+    highestDegree: '',
+    higherStudies: '',
+    institutionName: '',
+    entrepreneurDetails: '',
+    socialProjects: '',
     accompanyCount: '0',
-    foodPreference: '',
-    areaOfExpert: ''
+    foodPreference: ''
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -30,44 +36,106 @@ export default function AlumniRegistrationForm() {
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required';
     }
-    
+
+    if (!formData.courseStudied) {
+      newErrors.courseStudied = 'Please select a course';
+    }
+
     if (!formData.yearOfPassout) {
-      newErrors.yearOfPassout = 'Year of passout is required';
+      newErrors.yearOfPassout = 'Pass out batch is required';
     }
-    
-    if (!formData.department) {
-      newErrors.department = 'Please select a department';
+
+    if (!formData.designation.trim()) {
+      newErrors.designation = 'Designation or current role is required';
     }
-    
+
     if (!formData.whatsappNumber.trim()) {
       newErrors.whatsappNumber = 'WhatsApp number is required';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Invalid email format';
     }
-    
+
+    if (!formData.highestDegree.trim()) {
+      newErrors.highestDegree = 'Highest degree obtained is required';
+    }
+
+    if (!formData.higherStudies) {
+      newErrors.higherStudies = 'Please select an option';
+    }
+
+    if (formData.higherStudies === 'yes' && !formData.institutionName.trim()) {
+      newErrors.institutionName = 'Institution name is required';
+    }
+
+    if (!formData.accompanyCount) {
+      newErrors.accompanyCount = 'Number of persons accompanying is required';
+    }
+
     if (!formData.foodPreference) {
       newErrors.foodPreference = 'Please select food preference';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
-      console.log('Registration submitted:', formData);
-      alert('Registration successful! See you at the alumni meetup!');
+
+    console.log("✅ Submit button clicked");
+    console.log("📨 Form Data:", formData);
+
+    if (!validate()) {
+      console.log("❌ Validation failed:", errors);
+      return;
+    }
+
+    try {
+      console.log("⏳ Sending to Firestore...");
+
+      const docRef = await addDoc(collection(db, "alumniMeetupRegistrations"), {
+        ...formData,
+        accompanyCount: Number(formData.accompanyCount),
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+
+      console.log("✅ Data stored successfully!");
+      console.log("📄 Document ID:", docRef.id);
+
+      alert("Registration successful! See you at the alumni meetup!");
+
+      // Reset form
+      setFormData({
+        name: '',
+        courseStudied: '',
+        yearOfPassout: '',
+        designation: '',
+        email: '',
+        whatsappNumber: '',
+        highestDegree: '',
+        higherStudies: '',
+        institutionName: '',
+        entrepreneurDetails: '',
+        socialProjects: '',
+        accompanyCount: '0',
+        foodPreference: ''
+      });
+
+    } catch (error) {
+      console.error("🔥 Firestore Error:", error);
+      alert("Failed to submit. Please try again.");
     }
   };
+
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
@@ -84,7 +152,7 @@ export default function AlumniRegistrationForm() {
         <div className="absolute inset-0 border-4 border-[var(--accent)] rotate-45"></div>
         <div className="absolute inset-4 border-4 border-[var(--accent)] rotate-45"></div>
       </div>
-      
+
       <div className="absolute -bottom-10 -left-10 w-40 h-40 opacity-10 pointer-events-none">
         <div className="absolute inset-0 rounded-full border-4 border-[var(--secondary)]"></div>
         <div className="absolute inset-8 rounded-full border-4 border-[var(--secondary)]"></div>
@@ -99,19 +167,18 @@ export default function AlumniRegistrationForm() {
             <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
           </div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="relative z-10"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <Sparkles className="w-8 h-8 text-[var(--white)]" />
+            <div className="mb-4">
               <h1 className="text-[var(--white)] m-0">Alumni Meetup Registration</h1>
             </div>
             <p className="text-[var(--white)] opacity-90 m-0 max-w-2xl">
-              Join us for an unforgettable reunion! Register now to reconnect with your batchmates, 
+              Join us for an unforgettable reunion! Register now to reconnect with your batchmates,
               share experiences, and celebrate our collective journey.
             </p>
           </motion.div>
@@ -126,11 +193,10 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.3 }}
             className="mb-8"
           >
-            <h3 className="text-[var(--accent)] mb-6 flex items-center gap-2 border-b-2 border-[var(--secondary)] pb-2">
-              <User className="w-6 h-6" />
+            <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
               Personal Information
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Name */}
               <div className="relative">
@@ -145,9 +211,8 @@ export default function AlumniRegistrationForm() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Enter your full name"
-                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                    errors.name ? 'border-red-500' : 'border-[var(--secondary)]'
-                  } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.name ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                 />
                 {errors.name && (
                   <span className="text-red-500 text-sm mt-1 block">{errors.name}</span>
@@ -165,9 +230,8 @@ export default function AlumniRegistrationForm() {
                   name="yearOfPassout"
                   value={formData.yearOfPassout}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                    errors.yearOfPassout ? 'border-red-500' : 'border-[var(--secondary)]'
-                  } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.yearOfPassout ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                 >
                   <option value="">Select year</option>
                   {years.map(year => (
@@ -184,22 +248,21 @@ export default function AlumniRegistrationForm() {
                 )}
               </div>
 
-              {/* Department */}
+              {/* Course Studied */}
               <div className="relative">
-                <label htmlFor="department" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                <label htmlFor="courseStudied" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                   <Building2 className="w-4 h-4" />
-                  Department *
+                  Course Studied *
                 </label>
                 <select
-                  id="department"
-                  name="department"
-                  value={formData.department}
+                  id="courseStudied"
+                  name="courseStudied"
+                  value={formData.courseStudied}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                    errors.department ? 'border-red-500' : 'border-[var(--secondary)]'
-                  } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.courseStudied ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                 >
-                  <option value="">Select department</option>
+                  <option value="">Select course</option>
                   <option value="cse">Computer Science & Engineering</option>
                   <option value="ece">Electronics & Communication</option>
                   <option value="eee">Electrical & Electronics</option>
@@ -212,8 +275,8 @@ export default function AlumniRegistrationForm() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
-                {errors.department && (
-                  <span className="text-red-500 text-sm mt-1 block">{errors.department}</span>
+                {errors.courseStudied && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.courseStudied}</span>
                 )}
               </div>
             </div>
@@ -226,11 +289,10 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.4 }}
             className="mb-8"
           >
-            <h3 className="text-[var(--accent)] mb-6 flex items-center gap-2 border-b-2 border-[var(--secondary)] pb-2">
-              <Phone className="w-6 h-6" />
+            <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
               Contact Information
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* WhatsApp Number */}
               <div className="relative">
@@ -245,9 +307,8 @@ export default function AlumniRegistrationForm() {
                   value={formData.whatsappNumber}
                   onChange={handleChange}
                   placeholder="+91 XXXXX XXXXX"
-                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                    errors.whatsappNumber ? 'border-red-500' : 'border-[var(--secondary)]'
-                  } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.whatsappNumber ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                 />
                 {errors.whatsappNumber && (
                   <span className="text-red-500 text-sm mt-1 block">{errors.whatsappNumber}</span>
@@ -267,9 +328,8 @@ export default function AlumniRegistrationForm() {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="your.email@example.com"
-                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                    errors.email ? 'border-red-500' : 'border-[var(--secondary)]'
-                  } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.email ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                 />
                 {errors.email && (
                   <span className="text-red-500 text-sm mt-1 block">{errors.email}</span>
@@ -285,76 +345,136 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.5 }}
             className="mb-8"
           >
-            <h3 className="text-[var(--accent)] mb-6 flex items-center gap-2 border-b-2 border-[var(--secondary)] pb-2">
-              <Briefcase className="w-6 h-6" />
+            <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
               Professional Information
             </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-              {/* Current Organization */}
-              <div className="relative">
-                <label htmlFor="currentOrganization" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
-                  <Building2 className="w-4 h-4" />
-                  Current Organization
-                </label>
-                <input
-                  type="text"
-                  id="currentOrganization"
-                  name="currentOrganization"
-                  value={formData.currentOrganization}
-                  onChange={handleChange}
-                  placeholder="Company name"
-                  className="w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 border-[var(--secondary)] rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md"
-                />
-              </div>
 
-              {/* Current Position */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              {/* Designation or Current Role */}
               <div className="relative">
-                <label htmlFor="currentPosition" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                <label htmlFor="designation" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                   <Briefcase className="w-4 h-4" />
-                  Current Position
+                  Designation or Current Role *
                 </label>
                 <input
                   type="text"
-                  id="currentPosition"
-                  name="currentPosition"
-                  value={formData.currentPosition}
+                  id="designation"
+                  name="designation"
+                  value={formData.designation}
                   onChange={handleChange}
-                  placeholder="Job title"
-                  className="w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 border-[var(--secondary)] rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md"
+                  placeholder="e.g. Software Engineer, Manager, etc."
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.designation ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                 />
+                {errors.designation && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.designation}</span>
+                )}
               </div>
 
-              {/* Job Location */}
+              {/* Highest Degree Obtained */}
               <div className="relative">
-                <label htmlFor="jobLocation" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  Job Location
+                <label htmlFor="highestDegree" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                  <Award className="w-4 h-4" />
+                  Highest Degree Obtained *
                 </label>
                 <input
                   type="text"
-                  id="jobLocation"
-                  name="jobLocation"
-                  value={formData.jobLocation}
+                  id="highestDegree"
+                  name="highestDegree"
+                  value={formData.highestDegree}
                   onChange={handleChange}
-                  placeholder="City, Country"
-                  className="w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 border-[var(--secondary)] rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md"
+                  placeholder="e.g. B.Tech, M.Tech, PhD, etc."
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.highestDegree ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                 />
+                {errors.highestDegree && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.highestDegree}</span>
+                )}
               </div>
             </div>
 
-            {/* Area of Expert */}
-            <div className="relative">
-              <label htmlFor="areaOfExpert" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
-                <Award className="w-4 h-4" />
-                Area of Expertise
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              {/* Higher Studies */}
+              <div className="relative">
+                <label htmlFor="higherStudies" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                  <Building2 className="w-4 h-4" />
+                  Higher Studies Pursuing or Completed? *
+                </label>
+                <select
+                  id="higherStudies"
+                  name="higherStudies"
+                  value={formData.higherStudies}
+                  onChange={handleChange}
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.higherStudies ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                >
+                  <option value="">Select option</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+                <div className="absolute right-4 top-[42px] pointer-events-none">
+                  <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+                {errors.higherStudies && (
+                  <span className="text-red-500 text-sm mt-1 block">{errors.higherStudies}</span>
+                )}
+              </div>
+
+              {/* Institution Name - conditionally shown */}
+              {formData.higherStudies === 'yes' && (
+                <div className="relative">
+                  <label htmlFor="institutionName" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                    <Building2 className="w-4 h-4" />
+                    Institution Name or University Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="institutionName"
+                    name="institutionName"
+                    value={formData.institutionName}
+                    onChange={handleChange}
+                    placeholder="Enter institution or university name"
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.institutionName ? 'border-red-500' : 'border-[var(--secondary)]'
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                  />
+                  {errors.institutionName && (
+                    <span className="text-red-500 text-sm mt-1 block">{errors.institutionName}</span>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Entrepreneur Details */}
+            <div className="relative mb-6">
+              <label htmlFor="entrepreneurDetails" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                Are you an entrepreneur? If yes, give details.
               </label>
               <textarea
-                id="areaOfExpert"
-                name="areaOfExpert"
-                value={formData.areaOfExpert}
+                id="entrepreneurDetails"
+                name="entrepreneurDetails"
+                value={formData.entrepreneurDetails}
                 onChange={handleChange}
-                placeholder="Share your areas of expertise and specialization..."
+                placeholder="Share details about your entrepreneurial journey..."
+                rows={3}
+                className="w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 border-[var(--secondary)] rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md resize-none"
+              />
+            </div>
+
+            {/* Social Projects */}
+            <div className="relative">
+              <label htmlFor="socialProjects" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Have you been part of any socially relevant projects? If so kindly provide details.
+              </label>
+              <textarea
+                id="socialProjects"
+                name="socialProjects"
+                value={formData.socialProjects}
+                onChange={handleChange}
+                placeholder="Share details about your social impact work..."
                 rows={3}
                 className="w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 border-[var(--secondary)] rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md resize-none"
               />
@@ -368,11 +488,10 @@ export default function AlumniRegistrationForm() {
             transition={{ delay: 0.6 }}
             className="mb-8"
           >
-            <h3 className="text-[var(--accent)] mb-6 flex items-center gap-2 border-b-2 border-[var(--secondary)] pb-2">
-              <Users className="w-6 h-6" />
+            <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
               Event Details
             </h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Anyone Accompany */}
               <div className="relative">
@@ -405,9 +524,8 @@ export default function AlumniRegistrationForm() {
                   name="foodPreference"
                   value={formData.foodPreference}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                    errors.foodPreference ? 'border-red-500' : 'border-[var(--secondary)]'
-                  } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                  className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.foodPreference ? 'border-red-500' : 'border-[var(--secondary)]'
+                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                 >
                   <option value="">Select preference</option>
                   <option value="vegetarian">Vegetarian</option>
@@ -430,15 +548,14 @@ export default function AlumniRegistrationForm() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
-            className="flex justify-center"
+            className="flex justify-end"
           >
             <button
               type="submit"
               className="group relative px-12 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] text-[var(--white)] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95"
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                Complete Registration
+              <span className="relative z-10 flex items-center justify-center">
+                Submit
               </span>
               {/* Animated background on hover */}
               <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-dark)] to-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -447,7 +564,12 @@ export default function AlumniRegistrationForm() {
         </form>
 
         {/* Decorative bottom accent */}
-        <div className="h-2 bg-gradient-to-r from-[var(--accent)] via-[var(--secondary)] to-[var(--accent)]"></div>
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+          className="h-2 bg-gradient-to-r from-[var(--accent)] via-[var(--secondary)] to-[var(--accent)] origin-left"
+        ></motion.div>
       </div>
     </motion.div>
   );
