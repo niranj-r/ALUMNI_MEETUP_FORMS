@@ -502,7 +502,7 @@ export default function AlumniRegistrationForm() {
                   value={formData.accompanyCount}
                   onChange={handleChange}
                   min="0"
-                  max="5"
+                  max="25"
                   placeholder="0"
                   className="w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 border-[var(--secondary)] rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md"
                 />
