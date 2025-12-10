@@ -818,7 +818,6 @@ export default function AlumniRegistrationForm() {
                 </strong>
                 .
               </p>
-
               {/* WhatsApp Group Link */}
               <a
                 href="https://chat.whatsapp.com/YOUR_GROUP_LINK"
