@@ -814,7 +814,7 @@ export default function AlumniRegistrationForm() {
               <p className="text-[var(--neutral-mid)] mb-8">
                 See you on{" "}
                 <strong className="text-[var(--accent)]">
-                  28th December
+                  27th December
                 </strong>
                 .
               </p>

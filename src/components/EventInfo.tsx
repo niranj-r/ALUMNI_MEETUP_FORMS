@@ -6,7 +6,7 @@ export default function EventInfo() {
     {
       icon: Calendar,
       title: 'Date',
-      info: 'December 28, 2025'
+      info: 'December 27, 2025'
     },
     {
       icon: Clock,
