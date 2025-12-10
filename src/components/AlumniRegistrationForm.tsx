@@ -33,7 +33,9 @@ export default function AlumniRegistrationForm() {
     socialProjects: "",
     accompanyCount: "0",
     foodPreference: "",
+    willingToAttend: "",   // 👈 new
   });
+
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showModal, setShowModal] = useState(false);
@@ -80,10 +82,6 @@ export default function AlumniRegistrationForm() {
       newErrors.email = "Invalid email format";
     }
 
-    if (!formData.highestDegree.trim()) {
-      newErrors.highestDegree = "Highest degree obtained is required";
-    }
-
     if (!formData.higherStudies) {
       newErrors.higherStudies = "Please select an option";
     }
@@ -92,18 +90,26 @@ export default function AlumniRegistrationForm() {
       newErrors.institutionName = "Institution name is required";
     }
 
-    if (!formData.accompanyCount) {
-      newErrors.accompanyCount =
-        "Number of persons accompanying is required";
+    // ✅ Event logic
+    if (!formData.willingToAttend) {
+      newErrors.willingToAttend = "Please let us know if you’ll attend";
     }
 
-    if (!formData.foodPreference) {
-      newErrors.foodPreference = "Please select food preference";
+    if (formData.willingToAttend === "yes") {
+      if (!formData.accompanyCount) {
+        newErrors.accompanyCount =
+          "Number of persons accompanying is required";
+      }
+
+      if (!formData.foodPreference) {
+        newErrors.foodPreference = "Please select food preference";
+      }
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors; // ✅ THIS IS THE CRITICAL FIX
   };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,8 +117,11 @@ export default function AlumniRegistrationForm() {
     console.log("✅ Submit button clicked");
     console.log("📨 Form Data:", formData);
 
-    if (!validate()) {
-      console.log("❌ Validation failed:", errors);
+    const validationErrors = validate();   // ✅ store returned object
+    console.log("🔎 Validation errors:", validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {   // ✅ proper check
+      console.log("❌ Validation failed");
       return;
     }
 
@@ -132,7 +141,7 @@ export default function AlumniRegistrationForm() {
       console.log("✅ Data stored successfully!");
       console.log("📄 Document ID:", docRef.id);
 
-      // Reset form
+      // ✅ Reset form
       setFormData({
         name: "",
         courseStudied: "",
@@ -147,6 +156,7 @@ export default function AlumniRegistrationForm() {
         socialProjects: "",
         accompanyCount: "0",
         foodPreference: "",
+        willingToAttend: "",
       });
 
       setShowModal(true);
@@ -155,6 +165,7 @@ export default function AlumniRegistrationForm() {
       alert("Failed to submit. Please try again.");
     }
   };
+
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
@@ -237,11 +248,10 @@ export default function AlumniRegistrationForm() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your full name"
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.name
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.name
+                      ? "border-red-500"
+                      : "border-[var(--secondary)]"
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                   />
                   {errors.name && (
                     <span className="text-red-500 text-sm mt-1 block">
@@ -264,11 +274,10 @@ export default function AlumniRegistrationForm() {
                     name="yearOfPassout"
                     value={formData.yearOfPassout}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.yearOfPassout
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.yearOfPassout
+                      ? "border-red-500"
+                      : "border-[var(--secondary)]"
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                   >
                     <option value="">Select year</option>
                     {years.map((year) => (
@@ -313,11 +322,10 @@ export default function AlumniRegistrationForm() {
                     name="courseStudied"
                     value={formData.courseStudied}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.courseStudied
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.courseStudied
+                      ? "border-red-500"
+                      : "border-[var(--secondary)]"
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                   >
                     <option value="">Select course</option>
                     <option value="cse">
@@ -383,11 +391,10 @@ export default function AlumniRegistrationForm() {
                     value={formData.whatsappNumber}
                     onChange={handleChange}
                     placeholder="+91 XXXXX XXXXX"
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.whatsappNumber
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.whatsappNumber
+                      ? "border-red-500"
+                      : "border-[var(--secondary)]"
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                   />
                   {errors.whatsappNumber && (
                     <span className="text-red-500 text-sm mt-1 block">
@@ -412,11 +419,10 @@ export default function AlumniRegistrationForm() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="your.email@example.com"
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.email
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.email
+                      ? "border-red-500"
+                      : "border-[var(--secondary)]"
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                   />
                   {errors.email && (
                     <span className="text-red-500 text-sm mt-1 block">
@@ -455,44 +461,14 @@ export default function AlumniRegistrationForm() {
                     value={formData.designation}
                     onChange={handleChange}
                     placeholder="e.g. Software Engineer, Manager, etc."
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.designation
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.designation
+                      ? "border-red-500"
+                      : "border-[var(--secondary)]"
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                   />
                   {errors.designation && (
                     <span className="text-red-500 text-sm mt-1 block">
                       {errors.designation}
-                    </span>
-                  )}
-                </div>
-
-                {/* Highest Degree Obtained */}
-                <div className="relative">
-                  <label
-                    htmlFor="highestDegree"
-                    className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                  >
-                    <Award className="w-4 h-4" />
-                    Highest Degree Obtained *
-                  </label>
-                  <input
-                    type="text"
-                    id="highestDegree"
-                    name="highestDegree"
-                    value={formData.highestDegree}
-                    onChange={handleChange}
-                    placeholder="e.g. B.Tech, M.Tech, PhD, etc."
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.highestDegree
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
-                  />
-                  {errors.highestDegree && (
-                    <span className="text-red-500 text-sm mt-1 block">
-                      {errors.highestDegree}
                     </span>
                   )}
                 </div>
@@ -513,11 +489,10 @@ export default function AlumniRegistrationForm() {
                     name="higherStudies"
                     value={formData.higherStudies}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.higherStudies
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.higherStudies
+                      ? "border-red-500"
+                      : "border-[var(--secondary)]"
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                   >
                     <option value="">Select option</option>
                     <option value="yes">Yes</option>
@@ -562,11 +537,10 @@ export default function AlumniRegistrationForm() {
                       value={formData.institutionName}
                       onChange={handleChange}
                       placeholder="Enter institution or university name"
-                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                        errors.institutionName
-                          ? "border-red-500"
-                          : "border-[var(--secondary)]"
-                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.institutionName
+                        ? "border-red-500"
+                        : "border-[var(--secondary)]"
+                        } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                     />
                     {errors.institutionName && (
                       <span className="text-red-500 text-sm mt-1 block">
@@ -631,54 +605,28 @@ export default function AlumniRegistrationForm() {
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Anyone Accompany */}
+                {/* Willing to attend? */}
                 <div className="relative">
                   <label
-                    htmlFor="accompanyCount"
+                    htmlFor="willingToAttend"
                     className="block text-[var(--accent)] mb-2 flex items-center gap-2"
                   >
                     <Users className="w-4 h-4" />
-                    Anyone Accompanying? (Count)
-                  </label>
-                  <input
-                    type="number"
-                    id="accompanyCount"
-                    name="accompanyCount"
-                    value={formData.accompanyCount}
-                    onChange={handleChange}
-                    min="0"
-                    max="25"
-                    placeholder="0"
-                    className="w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 border-[var(--secondary)] rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md"
-                  />
-                  <p className="text-xs text-[var(--neutral-mid)] mt-1">
-                    Enter 0 if coming alone
-                  </p>
-                </div>
-
-                {/* Food Preference */}
-                <div className="relative">
-                  <label
-                    htmlFor="foodPreference"
-                    className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                  >
-                    <Utensils className="w-4 h-4" />
-                    Food Preference *
+                    Are you willing to attend the meetup? *
                   </label>
                   <select
-                    id="foodPreference"
-                    name="foodPreference"
-                    value={formData.foodPreference}
+                    id="willingToAttend"
+                    name="willingToAttend"
+                    value={formData.willingToAttend}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${
-                      errors.foodPreference
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
-                    } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.willingToAttend
+                      ? "border-red-500"
+                      : "border-[var(--secondary)]"
+                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                   >
-                    <option value="">Select preference</option>
-                    <option value="vegetarian">Vegetarian</option>
-                    <option value="non-vegetarian">Non-Vegetarian</option>
+                    <option value="">Select option</option>
+                    <option value="yes">Yes, I will attend</option>
+                    <option value="no">No, I won’t be able to attend</option>
                   </select>
                   <div className="absolute right-4 top-[42px] pointer-events-none">
                     <svg
@@ -695,14 +643,98 @@ export default function AlumniRegistrationForm() {
                       />
                     </svg>
                   </div>
-                  {errors.foodPreference && (
+                  {errors.willingToAttend && (
                     <span className="text-red-500 text-sm mt-1 block">
-                      {errors.foodPreference}
+                      {errors.willingToAttend}
                     </span>
                   )}
                 </div>
               </div>
+
+              {/* Conditional fields if they are attending */}
+              {formData.willingToAttend === "yes" && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  {/* Anyone Accompany */}
+                  <div className="relative">
+                    <label
+                      htmlFor="accompanyCount"
+                      className="block text-[var(--accent)] mb-2 flex items-center gap-2"
+                    >
+                      <Users className="w-4 h-4" />
+                      Anyone accompanying? (Count)
+                    </label>
+                    <input
+                      type="number"
+                      id="accompanyCount"
+                      name="accompanyCount"
+                      value={formData.accompanyCount}
+                      onChange={handleChange}
+                      min="0"
+                      max="25"
+                      placeholder="0"
+                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.accompanyCount
+                        ? "border-red-500"
+                        : "border-[var(--secondary)]"
+                        } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                    />
+                    <p className="text-xs text-[var(--neutral-mid)] mt-1">
+                      Enter 0 if you’re coming alone.
+                    </p>
+                    {errors.accompanyCount && (
+                      <span className="text-red-500 text-sm mt-1 block">
+                        {errors.accompanyCount}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Food Preference */}
+                  <div className="relative">
+                    <label
+                      htmlFor="foodPreference"
+                      className="block text-[var(--accent)] mb-2 flex items-center gap-2"
+                    >
+                      <Utensils className="w-4 h-4" />
+                      Food Preference *
+                    </label>
+                    <select
+                      id="foodPreference"
+                      name="foodPreference"
+                      value={formData.foodPreference}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.foodPreference
+                        ? "border-red-500"
+                        : "border-[var(--secondary)]"
+                        } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                    >
+                      <option value="">Select preference</option>
+                      <option value="vegetarian">Vegetarian</option>
+                      <option value="non-vegetarian">Non-Vegetarian</option>
+                    </select>
+                    <div className="absolute right-4 top-[42px] pointer-events-none">
+                      <svg
+                        className="w-5 h-5 text-[var(--accent)]"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                    {errors.foodPreference && (
+                      <span className="text-red-500 text-sm mt-1 block">
+                        {errors.foodPreference}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
             </motion.div>
+
 
             {/* Submit button */}
             <motion.div
