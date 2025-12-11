@@ -9,14 +9,9 @@ export default function EventInfo() {
       info: 'December 27, 2025'
     },
     {
-      icon: Clock,
-      title: 'Time',
-      info: '10:00 AM - 6:00 PM'
-    },
-    {
       icon: MapPin,
       title: 'Venue',
-      info: 'MBCET Campus Auditorium'
+      info: 'MBCET Campus'
     },
     {
       icon: Phone,
