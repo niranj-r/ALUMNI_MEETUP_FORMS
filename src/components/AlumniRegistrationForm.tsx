@@ -33,12 +33,12 @@ export default function AlumniRegistrationForm() {
     socialProjects: "",
     accompanyCount: "0",
     foodPreference: "",
-    willingToAttend: "",   // 👈 new
   });
 
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showModal, setShowModal] = useState(false);
+  const [attendingEvent, setAttendingEvent] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -91,18 +91,13 @@ export default function AlumniRegistrationForm() {
     }
 
     // ✅ Event logic
-    if (!formData.willingToAttend) {
-      newErrors.willingToAttend = "Please let us know if you’ll attend";
-    }
-
-    if (formData.willingToAttend === "yes") {
+    if (attendingEvent) {
       if (!formData.accompanyCount) {
-        newErrors.accompanyCount =
-          "Number of persons accompanying is required";
+        newErrors.accompanyCount = 'Number of persons accompanying is required';
       }
 
       if (!formData.foodPreference) {
-        newErrors.foodPreference = "Please select food preference";
+        newErrors.foodPreference = 'Please select food preference';
       }
     }
 
@@ -156,7 +151,6 @@ export default function AlumniRegistrationForm() {
         socialProjects: "",
         accompanyCount: "0",
         foodPreference: "",
-        willingToAttend: "",
       });
 
       setShowModal(true);
@@ -599,68 +593,45 @@ export default function AlumniRegistrationForm() {
               transition={{ delay: 0.6 }}
               className="mb-8"
             >
-              <h3 className="text-[var(--accent)] mb-6 border-b-2 border-[var(--secondary)] pb-2">
-                Event Details
-              </h3>
+              <div className="flex items-center justify-between mb-6 border-b-2 border-[var(--secondary)] pb-2">
+                <h3 className="text-[var(--accent)] m-0">
+                  Event Details
+                </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Willing to attend? */}
-                <div className="relative">
-                  <label
-                    htmlFor="willingToAttend"
-                    className="block text-[var(--accent)] mb-2 flex items-center gap-2"
+                {/* Toggle Button */}
+                <div className="flex items-center gap-3">
+                  <span className={`text-sm transition-colors duration-300 ${attendingEvent ? 'text-[var(--accent)]' : 'text-[var(--neutral-mid)]'}`}>
+                    {attendingEvent ? 'Attending Event' : 'Not Attending'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setAttendingEvent(!attendingEvent)}
+                    className={`relative w-16 h-8 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 ${attendingEvent ? 'bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)]' : 'bg-[var(--secondary)]'
+                      }`}
                   >
-                    <Users className="w-4 h-4" />
-                    Are you willing to attend the meetup? *
-                  </label>
-                  <select
-                    id="willingToAttend"
-                    name="willingToAttend"
-                    value={formData.willingToAttend}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.willingToAttend
-                      ? "border-red-500"
-                      : "border-[var(--secondary)]"
-                      } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
-                  >
-                    <option value="">Select option</option>
-                    <option value="yes">Yes, I will attend</option>
-                    <option value="no">No, I won’t be able to attend</option>
-                  </select>
-                  <div className="absolute right-4 top-[42px] pointer-events-none">
-                    <svg
-                      className="w-5 h-5 text-[var(--accent)]"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
-                  {errors.willingToAttend && (
-                    <span className="text-red-500 text-sm mt-1 block">
-                      {errors.willingToAttend}
-                    </span>
-                  )}
+                    <motion.div
+                      animate={{ x: attendingEvent ? 32 : 4 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      className="absolute top-1 w-6 h-6 bg-white rounded-full shadow-md"
+                    />
+                  </button>
                 </div>
               </div>
 
-              {/* Conditional fields if they are attending */}
-              {formData.willingToAttend === "yes" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              {/* Conditionally render event fields */}
+              {attendingEvent && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
+                >
                   {/* Anyone Accompany */}
                   <div className="relative">
-                    <label
-                      htmlFor="accompanyCount"
-                      className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                    >
+                    <label htmlFor="accompanyCount" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                       <Users className="w-4 h-4" />
-                      Anyone accompanying? (Count)
+                      Anyone Accompanying? (Count) *
                     </label>
                     <input
                       type="number"
@@ -669,29 +640,20 @@ export default function AlumniRegistrationForm() {
                       value={formData.accompanyCount}
                       onChange={handleChange}
                       min="0"
-                      max="25"
+                      max="5"
                       placeholder="0"
-                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.accompanyCount
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
+                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.accompanyCount ? 'border-red-500' : 'border-[var(--secondary)]'
                         } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                     />
-                    <p className="text-xs text-[var(--neutral-mid)] mt-1">
-                      Enter 0 if you’re coming alone.
-                    </p>
                     {errors.accompanyCount && (
-                      <span className="text-red-500 text-sm mt-1 block">
-                        {errors.accompanyCount}
-                      </span>
+                      <span className="text-red-500 text-sm mt-1 block">{errors.accompanyCount}</span>
                     )}
+                    <p className="text-xs text-[var(--neutral-mid)] mt-1">Enter 0 if coming alone</p>
                   </div>
 
                   {/* Food Preference */}
                   <div className="relative">
-                    <label
-                      htmlFor="foodPreference"
-                      className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                    >
+                    <label htmlFor="foodPreference" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                       <Utensils className="w-4 h-4" />
                       Food Preference *
                     </label>
@@ -700,9 +662,7 @@ export default function AlumniRegistrationForm() {
                       name="foodPreference"
                       value={formData.foodPreference}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.foodPreference
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
+                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.foodPreference ? 'border-red-500' : 'border-[var(--secondary)]'
                         } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                     >
                       <option value="">Select preference</option>
@@ -710,27 +670,15 @@ export default function AlumniRegistrationForm() {
                       <option value="non-vegetarian">Non-Vegetarian</option>
                     </select>
                     <div className="absolute right-4 top-[42px] pointer-events-none">
-                      <svg
-                        className="w-5 h-5 text-[var(--accent)]"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
+                      <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </div>
                     {errors.foodPreference && (
-                      <span className="text-red-500 text-sm mt-1 block">
-                        {errors.foodPreference}
-                      </span>
+                      <span className="text-red-500 text-sm mt-1 block">{errors.foodPreference}</span>
                     )}
                   </div>
-                </div>
+                </motion.div>
               )}
             </motion.div>
 
@@ -767,11 +715,11 @@ export default function AlumniRegistrationForm() {
 
       {/* Success Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-[rgba(0,0,0,0.3)] backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-[rgba(255,255,255,0)] bg-opacity-20 backdrop-blur-md flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20 }}
             className="relative bg-[var(--white)] backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border-2 border-[var(--secondary)] w-full max-w-md"
           >
             {/* Header section with gradient background */}
@@ -781,18 +729,18 @@ export default function AlumniRegistrationForm() {
                 <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full blur-3xl"></div>
                 <div className="absolute bottom-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl"></div>
               </div>
-
+              
               <div className="relative z-10 text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
                   className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full mb-4"
                 >
                   <Check className="w-10 h-10 text-[var(--accent)]" strokeWidth={3} />
                 </motion.div>
                 <h2 className="text-[var(--white)] m-0">
-                  Registration Successful!
+                  {attendingEvent ? 'Registration Successful!' : 'Thank You!'}
                 </h2>
               </div>
 
@@ -805,35 +753,59 @@ export default function AlumniRegistrationForm() {
               </button>
             </div>
 
-            {/* Content section */}
+            {/* Content section - conditional based on attendingEvent */}
             <div className="px-8 py-10 text-center">
-              <p className="text-[var(--accent)] mb-2">
-                Thank you for registering!
-              </p>
-              <p className="text-[var(--neutral-mid)] mb-8">
-                See you on{" "}
-                <strong className="text-[var(--accent)]">
-                  27th December
-                </strong>
-                .
-              </p>
-              {/* WhatsApp Group Link */}
-              <a
-                href="https://chat.whatsapp.com/YOUR_GROUP_LINK"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative px-12 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] text-[var(--white)] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 inline-block"
-              >
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  Click to join WhatsApp group
-                </span>
-                {/* Animated background on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-dark)] to-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </a>
+              {attendingEvent ? (
+                <>
+                  <p className="text-[var(--accent)] mb-2">
+                    Thank you for registering!
+                  </p>
+                  <p className="text-[var(--neutral-mid)] mb-8">
+                    See you on <strong className="text-[var(--accent)]">28th December</strong>
+                  </p>
+
+                  {/* WhatsApp Group Link */}
+                  <a
+                    href="https://chat.whatsapp.com/YOUR_GROUP_LINK"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative px-12 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] text-[var(--white)] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 inline-block"
+                  >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      Click to join WhatsApp group
+                    </span>
+                    {/* Animated background on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-dark)] to-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </a>
+                </>
+              ) : (
+                <>
+                  <p className="text-[var(--accent)] mb-2">
+                    Thank you for sharing your details!
+                  </p>
+                  <p className="text-[var(--neutral-mid)] mb-8">
+                    We appreciate you taking the time to update your information. We'll keep you posted on future events and opportunities.
+                  </p>
+
+                  {/* Stay Connected Button */}
+                  <a
+                    href="https://your-website.com/stay-connected"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative px-12 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] text-[var(--white)] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 inline-block"
+                  >
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      Stay Connected
+                    </span>
+                    {/* Animated background on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-dark)] to-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </a>
+                </>
+              )}
             </div>
 
             {/* Decorative bottom accent */}
-            <motion.div
+            <motion.div 
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
