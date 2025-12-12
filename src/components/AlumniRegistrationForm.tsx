@@ -162,7 +162,7 @@ export default function AlumniRegistrationForm() {
 
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  const years = Array.from({ length: currentYear - 2006 + 1 }, (_, i) => 2006 + i).reverse();
 
   return (
     <>
