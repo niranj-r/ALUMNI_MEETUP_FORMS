@@ -224,7 +224,7 @@ export default function AlumniRegistrationForm() {
             >
               <div className="mb-4">
                 <h1 className="text-[var(--white)] m-0">
-                  Alumni Meetup Registration
+                  Alumni Registration
                 </h1>
               </div>
               <p className="text-[var(--white)] opacity-90 m-0 max-w-2xl">
