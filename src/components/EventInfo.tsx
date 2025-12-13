@@ -18,13 +18,13 @@ export default function EventInfo() {
       title: 'Further Inquiries',
       info: (
         <>
-          Niranj R
+          Ms. S Asha
           <br />
-          9567655760
+          94477 41066
           <br />
-          Sradhya Renish
+          Mr. V S Shibu
           <br />
-          9207755908
+          99613 30770
         </>
       )
     }
