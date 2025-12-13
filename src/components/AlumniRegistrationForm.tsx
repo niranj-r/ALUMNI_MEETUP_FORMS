@@ -778,7 +778,6 @@ export default function AlumniRegistrationForm() {
             </motion.div>
           </form>
 
-
           {/* Bottom border animation */}
           <motion.div
             initial={{ scaleX: 0 }}
