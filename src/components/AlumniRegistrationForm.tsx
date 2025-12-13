@@ -575,7 +575,7 @@ export default function AlumniRegistrationForm() {
                   <Hand className="w-4 h-4" />
                   Willing to contribute as (tick all applicable):
                 </label>
-                <div className="space-y-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[
                     { value: 'guest-lecture', label: 'Guest Lecture' },
                     { value: 'industry-mentor', label: 'Industry Mentor' },
