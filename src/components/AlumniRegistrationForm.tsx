@@ -12,6 +12,7 @@ import {
   Award,
   Sparkles,
   Check,
+  Hand,
   X,
 } from "lucide-react";
 
@@ -33,6 +34,8 @@ export default function AlumniRegistrationForm() {
     socialProjects: "",
     accompanyCount: "0",
     foodPreference: "",
+    contributions: [] as string[],
+    consent: false
   });
 
 
@@ -52,6 +55,21 @@ export default function AlumniRegistrationForm() {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData(prev => ({ ...prev, [name]: checked }));
+  };
+
+  const handleContributionsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    if (formData.contributions.includes(value)) {
+      setFormData(prev => ({ ...prev, contributions: prev.contributions.filter(item => item !== value) }));
+    } else {
+      setFormData(prev => ({ ...prev, contributions: [...prev.contributions, value] }));
+    }
+  };
+
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -99,6 +117,9 @@ export default function AlumniRegistrationForm() {
       if (!formData.foodPreference) {
         newErrors.foodPreference = 'Please select food preference';
       }
+    }
+    if (!formData.consent) {
+      newErrors.consent = 'You must consent to continue';
     }
 
     setErrors(newErrors);
@@ -151,6 +172,8 @@ export default function AlumniRegistrationForm() {
         socialProjects: "",
         accompanyCount: "0",
         foodPreference: "",
+        contributions: [] as string[],
+        consent: false
       });
 
       setShowModal(true);
@@ -625,60 +648,152 @@ export default function AlumniRegistrationForm() {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
                 >
-                  {/* Anyone Accompany */}
-                  <div className="relative">
-                    <label htmlFor="accompanyCount" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
-                      <Users className="w-4 h-4" />
-                      Anyone Accompanying? (Count) *
-                    </label>
-                    <input
-                      type="number"
-                      id="accompanyCount"
-                      name="accompanyCount"
-                      value={formData.accompanyCount}
-                      onChange={handleChange}
-                      min="0"
-                      max="5"
-                      placeholder="0"
-                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.accompanyCount ? 'border-red-500' : 'border-[var(--secondary)]'
-                        } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
-                    />
-                    {errors.accompanyCount && (
-                      <span className="text-red-500 text-sm mt-1 block">{errors.accompanyCount}</span>
-                    )}
-                    <p className="text-xs text-[var(--neutral-mid)] mt-1">Enter 0 if coming alone</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    {/* Anyone Accompany */}
+                    <div className="relative">
+                      <label htmlFor="accompanyCount" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        Anyone Accompanying? (Count) *
+                      </label>
+                      <input
+                        type="number"
+                        id="accompanyCount"
+                        name="accompanyCount"
+                        value={formData.accompanyCount}
+                        onChange={handleChange}
+                        min="0"
+                        max="5"
+                        placeholder="0"
+                        className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.accompanyCount ? 'border-red-500' : 'border-[var(--secondary)]'
+                          } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
+                      />
+                      {errors.accompanyCount && (
+                        <span className="text-red-500 text-sm mt-1 block">{errors.accompanyCount}</span>
+                      )}
+                      <p className="text-xs text-[var(--neutral-mid)] mt-1">Enter 0 if coming alone</p>
+                    </div>
+
+                    {/* Food Preference */}
+                    <div className="relative">
+                      <label htmlFor="foodPreference" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
+                        <Utensils className="w-4 h-4" />
+                        Food Preference *
+                      </label>
+                      <select
+                        id="foodPreference"
+                        name="foodPreference"
+                        value={formData.foodPreference}
+                        onChange={handleChange}
+                        className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.foodPreference ? 'border-red-500' : 'border-[var(--secondary)]'
+                          } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
+                      >
+                        <option value="">Select preference</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="non-vegetarian">Non-Vegetarian</option>
+                      </select>
+                      <div className="absolute right-4 top-[42px] pointer-events-none">
+                        <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                      {errors.foodPreference && (
+                        <span className="text-red-500 text-sm mt-1 block">{errors.foodPreference}</span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Food Preference */}
+                  {/* Willing to Contribute */}
                   <div className="relative">
-                    <label htmlFor="foodPreference" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
-                      <Utensils className="w-4 h-4" />
-                      Food Preference *
+                    <label className="block text-[var(--accent)] mb-3 flex items-center gap-2">
+                      <Hand className="w-4 h-4" />
+                      Willing to contribute as (tick all applicable):
                     </label>
-                    <select
-                      id="foodPreference"
-                      name="foodPreference"
-                      value={formData.foodPreference}
-                      onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.foodPreference ? 'border-red-500' : 'border-[var(--secondary)]'
-                        } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
-                    >
-                      <option value="">Select preference</option>
-                      <option value="vegetarian">Vegetarian</option>
-                      <option value="non-vegetarian">Non-Vegetarian</option>
-                    </select>
-                    <div className="absolute right-4 top-[42px] pointer-events-none">
-                      <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
+                    <div className="space-y-3">
+                      {[
+                        { value: 'guest-lecture', label: 'Guest Lecture' },
+                        { value: 'industry-mentor', label: 'Industry Mentor' },
+                        { value: 'internship-support', label: 'Internship Support' },
+                        { value: 'placement-assistance', label: 'Placement Assistance' },
+                        { value: 'project-guidance', label: 'Project Guidance' }
+                      ].map((contribution) => (
+                        <label
+                          key={contribution.value}
+                          className={`flex items-center gap-3 p-4 bg-[var(--dominant-bg)] border-2 rounded-xl transition-all duration-300 cursor-pointer group ${formData.contributions.includes(contribution.value)
+                              ? 'border-[var(--accent)] bg-gradient-to-r from-[var(--accent)]/10 to-transparent'
+                              : 'border-[var(--secondary)] hover:border-[var(--accent)]'
+                            }`}
+                        >
+                          <input
+                            type="checkbox"
+                            value={contribution.value}
+                            checked={formData.contributions.includes(contribution.value)}
+                            onChange={handleContributionsChange}
+                            className="sr-only"
+                          />
+                          <div className={`relative w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300 ${formData.contributions.includes(contribution.value)
+                              ? 'bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dark)] border-[var(--accent)] scale-110'
+                              : 'bg-white border-[var(--secondary)] group-hover:border-[var(--accent)]'
+                            }`}>
+                            {formData.contributions.includes(contribution.value) && (
+                              <motion.div
+                                initial={{ scale: 0, rotate: -180 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                              >
+                                <Check className="w-4 h-4 text-white" strokeWidth={3} />
+                              </motion.div>
+                            )}
+                          </div>
+                          <span className={`flex-1 transition-colors duration-300 ${formData.contributions.includes(contribution.value)
+                              ? 'text-[var(--accent-dark)]'
+                              : 'text-[var(--accent)] group-hover:text-[var(--accent-dark)]'
+                            }`}>
+                            {contribution.label}
+                          </span>
+                        </label>
+                      ))}
                     </div>
-                    {errors.foodPreference && (
-                      <span className="text-red-500 text-sm mt-1 block">{errors.foodPreference}</span>
-                    )}
                   </div>
                 </motion.div>
+              )}
+            </motion.div>
+
+            {/* Consent Section */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+              className="mb-8"
+            >
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  name="consent"
+                  checked={formData.consent}
+                  onChange={handleCheckboxChange}
+                  className="sr-only"
+                />
+                <div className={`relative w-5 h-5 mt-0.5 rounded border-2 flex items-center justify-center transition-all duration-300 flex-shrink-0 ${formData.consent
+                    ? 'bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dark)] border-[var(--accent)]'
+                    : 'bg-white border-[var(--secondary)] group-hover:border-[var(--accent)]'
+                  }`}>
+                  {formData.consent && (
+                    <motion.div
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                    >
+                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                    </motion.div>
+                  )}
+                </div>
+                <span className="text-[var(--accent)] text-sm group-hover:text-[var(--accent-dark)] transition-colors duration-300">
+                  I consent to the use of my information for academic, accreditation, and alumni engagement purposes. *
+                </span>
+              </label>
+              {errors.consent && (
+                <span className="text-red-500 text-sm mt-2 block">{errors.consent}</span>
               )}
             </motion.div>
 
@@ -729,7 +844,7 @@ export default function AlumniRegistrationForm() {
                 <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full blur-3xl"></div>
                 <div className="absolute bottom-0 right-0 w-40 h-40 bg-white rounded-full blur-3xl"></div>
               </div>
-              
+
               <div className="relative z-10 text-center">
                 <motion.div
                   initial={{ scale: 0 }}
@@ -805,7 +920,7 @@ export default function AlumniRegistrationForm() {
             </div>
 
             {/* Decorative bottom accent */}
-            <motion.div 
+            <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
