@@ -448,7 +448,6 @@ export default function AlumniRegistrationForm() {
                 </div>
               </div>
             </motion.div>
-
             {/* Professional Information Section */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -463,10 +462,7 @@ export default function AlumniRegistrationForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 {/* Designation or Current Role */}
                 <div className="relative">
-                  <label
-                    htmlFor="designation"
-                    className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                  >
+                  <label htmlFor="designation" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                     <Briefcase className="w-4 h-4" />
                     Designation or Current Role *
                   </label>
@@ -477,15 +473,11 @@ export default function AlumniRegistrationForm() {
                     value={formData.designation}
                     onChange={handleChange}
                     placeholder="e.g. Software Engineer, Manager, etc."
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.designation
-                      ? "border-red-500"
-                      : "border-[var(--secondary)]"
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.designation ? 'border-red-500' : 'border-[var(--secondary)]'
                       } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                   />
                   {errors.designation && (
-                    <span className="text-red-500 text-sm mt-1 block">
-                      {errors.designation}
-                    </span>
+                    <span className="text-red-500 text-sm mt-1 block">{errors.designation}</span>
                   )}
                 </div>
               </div>
@@ -493,10 +485,7 @@ export default function AlumniRegistrationForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 {/* Higher Studies */}
                 <div className="relative">
-                  <label
-                    htmlFor="higherStudies"
-                    className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                  >
+                  <label htmlFor="higherStudies" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                     <Building2 className="w-4 h-4" />
                     Higher Studies Pursuing or Completed? *
                   </label>
@@ -505,9 +494,7 @@ export default function AlumniRegistrationForm() {
                     name="higherStudies"
                     value={formData.higherStudies}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.higherStudies
-                      ? "border-red-500"
-                      : "border-[var(--secondary)]"
+                    className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.higherStudies ? 'border-red-500' : 'border-[var(--secondary)]'
                       } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md appearance-none cursor-pointer`}
                   >
                     <option value="">Select option</option>
@@ -515,34 +502,19 @@ export default function AlumniRegistrationForm() {
                     <option value="no">No</option>
                   </select>
                   <div className="absolute right-4 top-[42px] pointer-events-none">
-                    <svg
-                      className="w-5 h-5 text-[var(--accent)]"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
+                    <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
                   {errors.higherStudies && (
-                    <span className="text-red-500 text-sm mt-1 block">
-                      {errors.higherStudies}
-                    </span>
+                    <span className="text-red-500 text-sm mt-1 block">{errors.higherStudies}</span>
                   )}
                 </div>
 
                 {/* Institution Name - conditionally shown */}
-                {formData.higherStudies === "yes" && (
+                {formData.higherStudies === 'yes' && (
                   <div className="relative">
-                    <label
-                      htmlFor="institutionName"
-                      className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                    >
+                    <label htmlFor="institutionName" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                       <Building2 className="w-4 h-4" />
                       Institution Name or University Name *
                     </label>
@@ -553,15 +525,11 @@ export default function AlumniRegistrationForm() {
                       value={formData.institutionName}
                       onChange={handleChange}
                       placeholder="Enter institution or university name"
-                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.institutionName
-                        ? "border-red-500"
-                        : "border-[var(--secondary)]"
+                      className={`w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 ${errors.institutionName ? 'border-red-500' : 'border-[var(--secondary)]'
                         } rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md`}
                     />
                     {errors.institutionName && (
-                      <span className="text-red-500 text-sm mt-1 block">
-                        {errors.institutionName}
-                      </span>
+                      <span className="text-red-500 text-sm mt-1 block">{errors.institutionName}</span>
                     )}
                   </div>
                 )}
@@ -569,10 +537,7 @@ export default function AlumniRegistrationForm() {
 
               {/* Entrepreneur Details */}
               <div className="relative mb-6">
-                <label
-                  htmlFor="entrepreneurDetails"
-                  className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                >
+                <label htmlFor="entrepreneurDetails" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
                   Are you an entrepreneur? If yes, give details.
                 </label>
@@ -588,14 +553,10 @@ export default function AlumniRegistrationForm() {
               </div>
 
               {/* Social Projects */}
-              <div className="relative">
-                <label
-                  htmlFor="socialProjects"
-                  className="block text-[var(--accent)] mb-2 flex items-center gap-2"
-                >
+              <div className="relative mb-6">
+                <label htmlFor="socialProjects" className="block text-[var(--accent)] mb-2 flex items-center gap-2">
                   <Users className="w-4 h-4" />
-                  Have you been part of any socially relevant projects? If so
-                  kindly provide details.
+                  Have you been part of any socially relevant projects? If so kindly provide details.
                 </label>
                 <textarea
                   id="socialProjects"
@@ -606,6 +567,59 @@ export default function AlumniRegistrationForm() {
                   rows={3}
                   className="w-full px-4 py-3 bg-[var(--dominant-bg)] border-2 border-[var(--secondary)] rounded-xl focus:outline-none focus:border-[var(--accent)] transition-all duration-300 hover:border-[var(--accent)] hover:shadow-md resize-none"
                 />
+              </div>
+
+              {/* Willing to Contribute */}
+              <div className="relative">
+                <label className="block text-[var(--accent)] mb-3 flex items-center gap-2">
+                  <Hand className="w-4 h-4" />
+                  Willing to contribute as (tick all applicable):
+                </label>
+                <div className="space-y-3">
+                  {[
+                    { value: 'guest-lecture', label: 'Guest Lecture' },
+                    { value: 'industry-mentor', label: 'Industry Mentor' },
+                    { value: 'internship-support', label: 'Internship Support' },
+                    { value: 'placement-assistance', label: 'Placement Assistance' },
+                    { value: 'project-guidance', label: 'Project Guidance' }
+                  ].map((contribution) => (
+                    <label
+                      key={contribution.value}
+                      className={`flex items-center gap-3 p-4 bg-[var(--dominant-bg)] border-2 rounded-xl transition-all duration-300 cursor-pointer group ${formData.contributions.includes(contribution.value)
+                          ? 'border-[var(--accent)] bg-gradient-to-r from-[var(--accent)]/10 to-transparent'
+                          : 'border-[var(--secondary)] hover:border-[var(--accent)]'
+                        }`}
+                    >
+                      <input
+                        type="checkbox"
+                        value={contribution.value}
+                        checked={formData.contributions.includes(contribution.value)}
+                        onChange={handleContributionsChange}
+                        className="sr-only"
+                      />
+                      <div className={`relative w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300 ${formData.contributions.includes(contribution.value)
+                          ? 'bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dark)] border-[var(--accent)] scale-110'
+                          : 'bg-white border-[var(--secondary)] group-hover:border-[var(--accent)]'
+                        }`}>
+                        {formData.contributions.includes(contribution.value) && (
+                          <motion.div
+                            initial={{ scale: 0, rotate: -180 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+                          >
+                            <Check className="w-4 h-4 text-white" strokeWidth={3} />
+                          </motion.div>
+                        )}
+                      </div>
+                      <span className={`flex-1 transition-colors duration-300 ${formData.contributions.includes(contribution.value)
+                          ? 'text-[var(--accent-dark)]'
+                          : 'text-[var(--accent)] group-hover:text-[var(--accent-dark)]'
+                        }`}>
+                        {contribution.label}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
             </motion.div>
 
@@ -702,59 +716,6 @@ export default function AlumniRegistrationForm() {
                       )}
                     </div>
                   </div>
-
-                  {/* Willing to Contribute */}
-                  <div className="relative">
-                    <label className="block text-[var(--accent)] mb-3 flex items-center gap-2">
-                      <Hand className="w-4 h-4" />
-                      Willing to contribute as (tick all applicable):
-                    </label>
-                    <div className="space-y-3">
-                      {[
-                        { value: 'guest-lecture', label: 'Guest Lecture' },
-                        { value: 'industry-mentor', label: 'Industry Mentor' },
-                        { value: 'internship-support', label: 'Internship Support' },
-                        { value: 'placement-assistance', label: 'Placement Assistance' },
-                        { value: 'project-guidance', label: 'Project Guidance' }
-                      ].map((contribution) => (
-                        <label
-                          key={contribution.value}
-                          className={`flex items-center gap-3 p-4 bg-[var(--dominant-bg)] border-2 rounded-xl transition-all duration-300 cursor-pointer group ${formData.contributions.includes(contribution.value)
-                              ? 'border-[var(--accent)] bg-gradient-to-r from-[var(--accent)]/10 to-transparent'
-                              : 'border-[var(--secondary)] hover:border-[var(--accent)]'
-                            }`}
-                        >
-                          <input
-                            type="checkbox"
-                            value={contribution.value}
-                            checked={formData.contributions.includes(contribution.value)}
-                            onChange={handleContributionsChange}
-                            className="sr-only"
-                          />
-                          <div className={`relative w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-300 ${formData.contributions.includes(contribution.value)
-                              ? 'bg-gradient-to-br from-[var(--accent)] to-[var(--accent-dark)] border-[var(--accent)] scale-110'
-                              : 'bg-white border-[var(--secondary)] group-hover:border-[var(--accent)]'
-                            }`}>
-                            {formData.contributions.includes(contribution.value) && (
-                              <motion.div
-                                initial={{ scale: 0, rotate: -180 }}
-                                animate={{ scale: 1, rotate: 0 }}
-                                transition={{ type: 'spring', stiffness: 500, damping: 25 }}
-                              >
-                                <Check className="w-4 h-4 text-white" strokeWidth={3} />
-                              </motion.div>
-                            )}
-                          </div>
-                          <span className={`flex-1 transition-colors duration-300 ${formData.contributions.includes(contribution.value)
-                              ? 'text-[var(--accent-dark)]'
-                              : 'text-[var(--accent)] group-hover:text-[var(--accent-dark)]'
-                            }`}>
-                            {contribution.label}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
                 </motion.div>
               )}
             </motion.div>
@@ -797,7 +758,6 @@ export default function AlumniRegistrationForm() {
               )}
             </motion.div>
 
-
             {/* Submit button */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -817,6 +777,7 @@ export default function AlumniRegistrationForm() {
               </button>
             </motion.div>
           </form>
+
 
           {/* Bottom border animation */}
           <motion.div
