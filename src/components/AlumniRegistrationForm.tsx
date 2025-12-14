@@ -841,13 +841,13 @@ export default function AlumniRegistrationForm() {
 
                   {/* WhatsApp Group Link */}
                   <a
-                    href="https://chat.whatsapp.com/YOUR_GROUP_LINK"
+                    href="https://csembcetalumni.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group relative px-12 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] text-[var(--white)] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 inline-block"
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">
-                      Click to join WhatsApp group
+                      Stay Connected to Peers
                     </span>
                     {/* Animated background on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-dark)] to-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -864,7 +864,7 @@ export default function AlumniRegistrationForm() {
 
                   {/* Stay Connected Button */}
                   <a
-                    href="https://your-website.com/stay-connected"
+                    href="https://csembcetalumni.vercel.app/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group relative px-12 py-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-dark)] text-[var(--white)] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:scale-105 active:scale-95 inline-block"
