@@ -348,7 +348,7 @@ export default function AlumniRegistrationForm() {
                     <option value="cse">
                       B.Tech Computer Science & Engineering
                     </option>
-                    <option value="ct">
+                    <option value="it">
                       B.Tech Information Technology
                     </option>
                     <option value="mcse">
