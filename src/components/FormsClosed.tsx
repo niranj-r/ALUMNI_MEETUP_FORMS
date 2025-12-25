@@ -6,22 +6,22 @@ export default function FormsClosed() {
     {
       icon: Calendar,
       title: 'Date',
-      info: '28th December 2024'
+      info: '27th December 2025'
     },
     {
       icon: Clock,
       title: 'Time',
-      info: '10:00 AM - 5:00 PM'
+      info: '3:00 PM - 7:00 PM'
     },
     {
       icon: MapPin,
       title: 'Venue',
-      info: 'College Auditorium'
+      info: 'MBCET College Campus'
     },
     {
       icon: Phone,
       title: 'Contact',
-info: `Ms. S Asha 94477 41066
+info: `Ms. S Asha 94477 41066 | 
 Mr. V S Shibu 99613 30770`
 
     }
@@ -107,7 +107,7 @@ Mr. V S Shibu 99613 30770`
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.9, type: 'spring', stiffness: 100 }}
-          className="relative bg-gradient-to-br from-[var(--white)] to-[var(--dominant-bg)] rounded-2xl p-8 shadow-lg border-2 border-[var(--secondary)]"
+          className="relative bg-gradient-to-br from-[var(--white)] to-[var(--dominant-bg)] rounded-2xl p-8 shadow-lg border-2 border-[var(--secondary)] mb-6"
         >
           <div className="grid grid-cols-1 md:grid-cols-2">
             {eventDetails.map((detail, index) => (
