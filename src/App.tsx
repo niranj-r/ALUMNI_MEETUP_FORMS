@@ -6,7 +6,7 @@ import FormsClosed from './components/FormsClosed';
 export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[var(--dominant-bg)] via-[var(--white)] to-[var(--dominant-bg)] py-16 px-4 relative overflow-hidden">
-      {/*
+      
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-20 left-10 w-96 h-96 bg-[var(--secondary)] rounded-full opacity-10 blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-[var(--accent)] rounded-full opacity-10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
@@ -31,8 +31,8 @@ export default function App() {
             <EventInfo />
           </div>
         </div>
-      </div>*/}
-      <FormsClosed />
+      </div>
+      {/*<FormsClosed />*/}
     </div>
   );
 }
